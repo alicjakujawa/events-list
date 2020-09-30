@@ -1,0 +1,15 @@
+.event {
+  height: 90px;
+  padding: 26px 20px;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.event:hover {
+  background-color: antiquewhite;
+}
+
+.secondary {
+  font-size: 12px;
+}
