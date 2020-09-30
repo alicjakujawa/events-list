@@ -81,7 +81,10 @@ export const EventsProvider = ({ children }) => {
           return { ...event, ...log };
         });
 
-        const domainAddedSetLogs = await getLogs(colonyClient, ColonyRoleSet());
+        const domainAddedSetLogs = await getLogs(
+          colonyClient,
+          DomainAdded(null)
+        );
         const domainAddedSetEvents = domainAddedSetLogs.map((log) => {
           const event = colonyClient.interface.parseLog(log);
           return { ...event, ...log };
@@ -93,8 +96,7 @@ export const EventsProvider = ({ children }) => {
           ...colonyRoleSetEvents,
           ...domainAddedSetEvents,
         ];
-
-        setEvents(mergedEvents);
+        setEvents(mergedEvents.reverse());
       } catch (err) {
         setHasError(true);
       } finally {
@@ -124,8 +126,39 @@ export const useEvents = () => {
   const { isLoading, events, colonyClient } = useContext(EventsContext);
 
   const getEventDate = async (blockHash) => {
-    const date = await getBlockTime(colonyClient.provider, blockHash);
-    return date;
+    let loading = false;
+    let time;
+    let error = false;
+    try {
+      loading = true;
+      time = await getBlockTime(colonyClient.provider, blockHash);
+    } catch (error) {
+      error = error;
+    } finally {
+      loading = false;
+    }
+
+    return { time, loading, error };
+  };
+
+  const getUserAddress = async (humanReadableFundingPotId) => {
+    let loading = false;
+    let userAddress;
+    let error = false;
+    try {
+      loading = true;
+      const { associatedTypeId } = await colonyClient.getFundingPot(
+        humanReadableFundingPotId
+      );
+      const payment = await colonyClient.getPayment(associatedTypeId);
+      userAddress = payment.recipient;
+    } catch (error) {
+      error = error;
+    } finally {
+      loading = false;
+    }
+
+    return { userAddress, loading, error };
   };
 
   return {
@@ -133,5 +166,6 @@ export const useEvents = () => {
     events,
     colonyClient,
     getEventDate,
+    getUserAddress,
   };
 };

@@ -2,31 +2,75 @@ import React, { useState, useEffect } from "react";
 import styles from "./ListItem.module.css";
 import { useEvents } from "../hooks/use-events";
 import { Avatar } from "./Avatar";
+import { utils } from "ethers";
+import { DomainAdded } from "./events/DomainAdded";
+import { ColonyRoleSet } from "./events/ColonyRoleSet";
+import { PayoutClaimed } from "./events/PayoutClaimed";
 
 interface ListItemProps {
-  event: any;
+  address: string;
+  blockHash: string;
+  name: string;
+  values: {
+    user: string;
+    domainId: {
+      _hex: string;
+    };
+    amount: {
+      _hex: string;
+    };
+    fundingPotId: {
+      _hex: string;
+    };
+    token: string;
+    role: number;
+  };
 }
 
-export const ListItem = ({ event }: ListItemProps) => {
+export const ListItem = ({
+  address,
+  blockHash,
+  name,
+  values,
+}: ListItemProps) => {
   const [date, setDate] = useState<string>("");
   const { getEventDate } = useEvents();
 
   useEffect(() => {
     const fetchData = async () => {
-      const logTime = await getEventDate(event.blockHash);
-      const date = new Date(logTime).toLocaleString();
-      setDate(date);
+      const { time, loading, error } = await getEventDate(blockHash);
+      if (!loading && !error && time) {
+        const date = new Date(time).toLocaleString();
+        setDate(date);
+      }
     };
     fetchData();
   }, []);
 
+  const entropy = values.user || blockHash;
   return (
     <div className={styles.event}>
-      {/* Entropy set to block hash because address was exact same for all events - have no idea why :facepalm: */}
-      <Avatar
-        entropy={event.blockHash || Math.random().toString(36).substring(10)}
-      />
-      <div>{event.name}</div>
+      <Avatar entropy={entropy} />
+      {name === "ColonyInitialised" && (
+        <div>Congratulations! It's a beautiful baby colony!</div>
+      )}
+      {name === "DomainAdded" && (
+        <DomainAdded domainId={values.domainId._hex} />
+      )}
+      {name === "ColonyRoleSet" && (
+        <ColonyRoleSet
+          domainId={values.domainId._hex}
+          role={values.role}
+          userAddress={values.user}
+        />
+      )}
+      {name === "PayoutClaimed" && (
+        <PayoutClaimed
+          amount={values.amount._hex}
+          fundingPotId={values.fundingPotId}
+          token={values.token}
+        />
+      )}
       <div className={styles.secondary}>{date}</div>
     </div>
   );

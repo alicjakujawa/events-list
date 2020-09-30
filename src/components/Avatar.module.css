@@ -1,9 +1,5 @@
-.avatar {
+.avatar__image {
   width: 37px;
   height: 37px;
   border-radius: 50%;
-}
-
-.avatar__image {
-  max-width: 100%;
 }
