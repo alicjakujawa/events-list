@@ -28,7 +28,7 @@ export const PayoutClaimed = ({
       }
     };
     fetchData();
-  }, []);
+  }, [fundingPotId._hex]);
 
   const humanReadableAmount = new utils.BigNumber(amount);
   const wei = new utils.BigNumber(10);

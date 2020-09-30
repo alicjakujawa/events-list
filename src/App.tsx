@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styles from "./App.module.css";
 import { EventsList } from "./components/EventsList";
 import { useEvents } from "./hooks/use-events";

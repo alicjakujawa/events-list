@@ -111,6 +111,7 @@ export const EventsProvider = ({ children }) => {
         isLoading,
         colonyClient,
         events,
+        hasError
       }}
     >
       {children}

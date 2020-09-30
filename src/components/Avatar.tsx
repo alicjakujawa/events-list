@@ -11,11 +11,11 @@ export const Avatar = ({ entropy }: AvatarProps) => {
 
   useEffect(() => {
     setSrc(makeBlockie(entropy));
-  }, []);
+  }, [entropy]);
 
   return (
     <div className={styles.avatar}>
-      <img className={styles.avatar__image} src={src} />
+      <img alt="" className={styles.avatar__image} src={src} />
     </div>
   );
 };
