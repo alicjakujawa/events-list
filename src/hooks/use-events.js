@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import {
   getColonyNetworkClient,
   Network,
-  getMultipleEvents,
   getLogs,
   getBlockTime,
 } from "@colony/colony-js";
@@ -132,8 +131,8 @@ export const useEvents = () => {
     try {
       loading = true;
       time = await getBlockTime(colonyClient.provider, blockHash);
-    } catch (error) {
-      error = error;
+    } catch (err) {
+      error = err;
     } finally {
       loading = false;
     }
@@ -152,8 +151,8 @@ export const useEvents = () => {
       );
       const payment = await colonyClient.getPayment(associatedTypeId);
       userAddress = payment.recipient;
-    } catch (error) {
-      error = error;
+    } catch (err) {
+      error = err;
     } finally {
       loading = false;
     }

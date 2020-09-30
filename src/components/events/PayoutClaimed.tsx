@@ -30,12 +30,15 @@ export const PayoutClaimed = ({
     fetchData();
   }, []);
 
-  const value = new utils.BigNumber(amount);
+  const humanReadableAmount = new utils.BigNumber(amount);
+  const wei = new utils.BigNumber(10);
+  const convertedAmount = humanReadableAmount.div(wei.pow(18));
+
   return (
     <div>
       User <b>{userAddress}</b> claimed{" "}
       <b>
-        {value.toString()} {token}
+        {convertedAmount.toString()} {token}
       </b>{" "}
       payout from pot {new utils.BigNumber(fundingPotId._hex).toString()}
     </div>

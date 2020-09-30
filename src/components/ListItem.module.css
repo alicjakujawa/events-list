@@ -1,9 +1,11 @@
 .event {
+  display: flex;
   height: 90px;
   padding: 26px 20px;
   background: white;
   border-radius: 6px;
   cursor: pointer;
+  box-sizing: border-box;
 }
 
 .event:hover {
@@ -12,4 +14,18 @@
 
 .secondary {
   font-size: 12px;
+}
+
+.content div:first-child {
+  margin-bottom: 5px;
+}
+
+.content {
+  overflow: hidden;
+}
+
+.content div {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
